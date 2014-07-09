@@ -88,23 +88,21 @@ sub http_client {
 	my $self = shift;
 
 	if ($self->{lengths}) {
+		# persistent connection
 		my @cookies = @{$self->{cookies} || []};
 		foreach my $len (@{$self->{lengths}}) {
 			my $cookie = shift @cookies;
-			http_request($self, $len, $cookie);
+			http_request($self, $len, "1.1", $cookie);
 		}
 	} else {
 		my $len = shift // $self->{len} // 251;
 		my $cookie = $self->{cookie};
-		http_request($self, $len, $cookie);
+		http_request($self, $len, "1.0", $cookie);
 	}
 }
 
 sub http_request {
-	my $self = shift;
-	my $len = shift;
-	my $cookie = shift;
-	my $vers = $self->{lengths} ? "1.1" : "1.0";
+	my ($self, $len, $vers, $cookie) = @_;
 	my $method = $self->{method} || "GET";
 	my %header = %{$self->{header} || {}};
 
