@@ -38,13 +38,15 @@ if (@ARGV and -f $ARGV[-1]) {
 }
 @ARGV == 1 or usage();
 
+my $redo = $args{lengths} && @{$args{lengths}};
+$redo = 0 if $args{client}{http_vers};  # only persistent without errors
 my($sport, $rport) = find_ports(num => 2);
 my $s = Server->new(
     func                => \&read_char,
     listendomain        => AF_INET,
     listenaddr          => "127.0.0.1",
     listenport          => $sport,
-    redo                => $args{lengths} && (0 + @{$args{lengths}}),
+    redo                => $redo,
     %{$args{server}},
 ) unless $args{server}{noserver};
 my $r = Relayd->new(

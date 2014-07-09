@@ -95,14 +95,15 @@ sub http_client {
 		return;
 	}
 
-	$self->{http_vers} ||= "1.1";
+	$self->{http_vers} ||= ["1.1", "1.0"];
+	my $vers = $self->{http_vers}[0];
 	my @lengths = @{$self->{redo}{lengths} || $self->{lengths}};
 	my @cookies = @{$self->{redo}{cookies} || $self->{cookies} || []};
 	while (defined (my $len = shift @lengths)) {
 		my $cookie = shift @cookies || $self->{cookie};
-		eval { http_request($self, $len, $self->{http_vers}, $cookie) };
+		eval { http_request($self, $len, $vers, $cookie) };
 		warn $@ if $@;
-		if (@lengths && ($@ || $self->{http_vers} eq "1.0")) {
+		if (@lengths && ($@ || $vers eq "1.0")) {
 			# reconnect and redo the outstanding requests
 			$self->{redo} = {
 			    lengths => \@lengths,
@@ -112,9 +113,9 @@ sub http_client {
 		}
 	}
 	delete $self->{redo};
-	if ($self->{http_vers} eq "1.1") {
-		# run the tests again without persistence
-		$self->{http_vers} = "1.0";
+	shift @{$self->{http_vers}};
+	if (@{$self->{http_vers}}) {
+		# run the tests again with other persistence
 		$self->{redo} = {
 		    lengths => [@{$self->{lengths}}],
 		    cookies => [@{$self->{cookies} || []}],
@@ -313,7 +314,11 @@ sub http_server {
 		print map { "$_\r\n" } @response;
 
 		if (ref($len) eq 'ARRAY') {
-			write_chunked($self, @$len);
+			if ($vers eq "1.1") {
+				write_chunked($self, @$len);
+			} else {
+				write_char($self, $_) foreach (@$len);
+			}
 		} else {
 			write_char($self, $len) if $method eq "GET";
 		}
