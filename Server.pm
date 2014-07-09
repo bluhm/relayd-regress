@@ -58,6 +58,10 @@ sub new {
 sub child {
 	my $self = shift;
 
+	# in case we redo the accept, shutdown the old one
+	shutdown(\*STDOUT, SHUT_WR);
+	delete $self->{as};
+
 	my $iosocket = $self->{ssl} ? "IO::Socket::SSL" : "IO::Socket::INET6";
 	my $as = $self->{ls}->accept()
 	    or die ref($self), " $iosocket socket accept failed: $!";

@@ -44,6 +44,10 @@ sub new {
 sub child {
 	my $self = shift;
 
+	# in case we redo the connect, shutdown the old one
+	shutdown(\*STDOUT, SHUT_WR);
+	delete $self->{cs};
+
 	$SSL_ERROR = "";
 	my $iosocket = $self->{ssl} ? "IO::Socket::SSL" : "IO::Socket::INET6";
 	my $cs = $iosocket->new(
