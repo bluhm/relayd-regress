@@ -44,10 +44,6 @@ sub new {
 sub child {
 	my $self = shift;
 
-	if ($self->{mreqs}) {
-		print STDERR "connection per request\n";
-		return;
-	}
 	$SSL_ERROR = "";
 	my $iosocket = $self->{ssl} ? "IO::Socket::SSL" : "IO::Socket::INET6";
 	my $cs = $iosocket->new(

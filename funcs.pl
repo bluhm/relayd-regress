@@ -134,7 +134,6 @@ sub http_client {
 		my $cookie = ($c < scalar(@cookies) && length($cookies[$c])) ?
 			$cookies[$c] : "";
 		++$c;
-		$self->{mreqs} && client_connect($self);
 		# encode the requested length or chunks into the url
 		my $path = ref($len) eq 'ARRAY' ? join("/", @$len) : $len;
 		# overwrite path with custom path
@@ -190,7 +189,6 @@ sub http_client {
 			read_char($self, $vers eq "1.1" ? $len : undef)
 			    if $method eq "GET";
 		}
-		$self->{mreqs} && client_disconnect($self);
 	}
 }
 
@@ -303,11 +301,9 @@ sub http_server {
 	my $self = shift;
 	my %header = %{$self->{header} || { Server => "Perl/".$^V }};
 	my $cookie = $self->{cookie} || "";
-	my $reqsc = $self->{mreqs} || 0;
 
 	my($method, $url, $vers);
 	do {
-		$self->{mreqs} && server_accept($self);
 		my $len;
 		{
 			local $/ = "\r\n";
@@ -364,10 +360,6 @@ sub http_server {
 			write_char($self, $len) if $method eq "GET";
 		}
 		IO::Handle::flush(\*STDOUT);
-		if ($self->{mreqs}) {
-			server_disconnect($self);
-			--$reqsc > 0 or return;
-		}
 	} while ($vers eq "1.1");
 }
 
