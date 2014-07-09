@@ -276,7 +276,7 @@ sub http_server {
 					$1 == $len or die ref($self),
 					    " bad content length $1";
 				}
-				$cookie ||= $1 if /^Cookie: (.*)/) {
+				$cookie ||= $1 if /^Cookie: (.*)/;
 			}
 		}
 		# XXX reading to EOF does not work with relayd
