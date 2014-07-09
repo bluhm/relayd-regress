@@ -24,7 +24,6 @@ use Socket;
 use Socket6;
 use IO::Socket;
 use IO::Socket::INET6;
-use IO::Socket::SSL;
 
 sub find_ports {
 	my %args = @_;
@@ -43,41 +42,6 @@ sub find_ports {
 	my @ports = map { $_->sockport() } @sockets;
 
 	return @ports;
-}
-
-sub client_connect {
-	my $self = shift;
-
-	$SSL_ERROR = "";
-	my $iosocket = $self->{ssl} ? "IO::Socket::SSL" : "IO::Socket::INET6";
-	my $cs = $iosocket->new(
-	    Proto		=> "tcp",
-	    Domain		=> $self->{connectdomain},
-	    PeerAddr		=> $self->{connectaddr},
-	    PeerPort		=> $self->{connectport},
-	    SSL_verify_mode	=> SSL_VERIFY_NONE,
-	) or die ref($self), " $iosocket socket connect failed: $!,$SSL_ERROR";
-	print STDERR "connect sock: ",$cs->sockhost()," ",$cs->sockport(),"\n";
-	print STDERR "connect peer: ",$cs->peerhost()," ",$cs->peerport(),"\n";
-
-	$self->{stdout} = *STDOUT;
-	$self->{stdin} = *STDIN;
-	*STDIN = *STDOUT = $self->{cs} = $cs;
-}
-
-sub client_disconnect {
-	my $self = shift;
-	my $cs = $self->{cs};
-
-	*STDOUT = $self->{stdout};
-	*STDIN = $self->{stdin};
-
-	print STDERR "shutdown sock: ",$cs->sockhost()," ",$cs->sockport(),"\n";
-	print STDERR "shutdown peer: ",$cs->peerhost()," ",$cs->peerport(),"\n";
-
-	IO::Handle::flush(\*STDOUT);
-	IO::Handle::flush($cs);
-	$cs->shutdown(SHUT_RDWR);
 }
 
 ########################################################################
@@ -162,18 +126,16 @@ sub http_client {
 			local $/ = "\r\n";
 			local $_ = <STDIN>;
 			defined
-			    or print STDERR ref($self),
-				" missing http $len response\n";
-			chomp if defined;
-			print STDERR "<<< $_\n" if defined;
-			die ref($self), " http response not ok"
-				if (!defined or !m{^HTTP/$vers 200 OK$}) &&
-				    !$self->{httpnok};
+			    or die ref($self), " missing http $len response";
+			chomp;
+			print STDERR "<<< $_\n";
+			m{^HTTP/$vers 200 OK$}
+			    or die ref($self), " http response not ok"
+			    unless $self->{httpnok};
 			while (<STDIN>) {
 				chomp;
 				print STDERR "<<< $_\n";
 				last if /^$/;
-				last if /^X-Chunk-Trailer:.*/;
 				if (/^Content-Length: (.*)/) {
 					$1 == $len or die ref($self),
 					    " bad content length $1";
@@ -267,34 +229,6 @@ sub read_char {
 
 	print STDERR "LEN: ", $len, "\n";
 	print STDERR "MD5: ", $ctx->hexdigest, "\n";
-}
-
-sub server_accept {
-	my $self = shift;
-	my $iosocket = $self->{ssl} ? "IO::Socket::SSL" : "IO::Socket::INET6";
-	my $as = $self->{ls}->accept()
-	    or die ref($self), " $iosocket socket accept failed: $!";
-	print STDERR "accept sock: ",$as->sockhost()," ",$as->sockport(),"\n";
-	print STDERR "accept peer: ",$as->peerhost()," ",$as->peerport(),"\n";
-
-	$self->{stdout} = *STDOUT;
-	$self->{stdin} = *STDIN;
-	*STDIN = *STDOUT = $self->{as} = $as;
-}
-
-sub server_disconnect {
-	my $self = shift;
-	my $as = $self->{as};
-	*STDOUT = $self->{stdout};
-	*STDIN = $self->{stdin};
-
-	print STDERR "shutdown sock: ",$as->sockhost()," ",$as->sockport(),"\n";
-	print STDERR "shutdown peer: ",$as->peerhost()," ",$as->peerport(),"\n";
-
-	IO::Handle::flush(\*STDOUT);
-	IO::Handle::flush($as);
-#	$as->shutdown(SHUT_RDWR);
-	IO::Handle::close($as);
 }
 
 sub http_server {
