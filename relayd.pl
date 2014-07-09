@@ -39,7 +39,7 @@ if (@ARGV and -f $ARGV[-1]) {
 @ARGV == 1 or usage();
 
 my $redo = $args{lengths} && @{$args{lengths}};
-$redo = 0 if $args{client}{http_vers};  # only persistent without errors
+$redo = 0 if $args{client}{http_vers};  # run only one persistent connection
 my($sport, $rport) = find_ports(num => 2);
 my $s = Server->new(
     func                => \&read_char,
