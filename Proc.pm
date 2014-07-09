@@ -101,9 +101,11 @@ sub run {
 	    or die ref($self), " dup STDIN failed: $!";
 	close($reader);
 
-	$self->child();
-	print STDERR $self->{up}, "\n";
-	$self->{func}->($self);
+	do {
+	    $self->child();
+	    print STDERR $self->{up}, "\n";
+	    $self->{func}->($self);
+	} while ($self->{redo});
 	print STDERR "Shutdown", "\n";
 	IO::Handle::flush(\*STDOUT);
 	IO::Handle::flush(\*STDERR);
