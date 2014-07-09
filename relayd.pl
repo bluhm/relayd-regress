@@ -44,6 +44,7 @@ my $s = Server->new(
     listendomain        => AF_INET,
     listenaddr          => "127.0.0.1",
     listenport          => $sport,
+    redo                => scalar @{$args{client}{lengths} || []},
     %{$args{server}},
 ) unless $args{server}{noserver};
 my $r = Relayd->new(

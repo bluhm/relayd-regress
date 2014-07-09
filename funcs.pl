@@ -88,11 +88,20 @@ sub http_client {
 	my $self = shift;
 
 	if ($self->{lengths}) {
-		# persistent connection
+		my @lengths = @{$self->{lengths}};
 		my @cookies = @{$self->{cookies} || []};
-		foreach my $len (@{$self->{lengths}}) {
-			my $cookie = shift @cookies;
-			http_request($self, $len, "1.1", $cookie);
+		if ($self->{redo}) {
+			# multiple connections
+			http_request($self, $lengths[-$self->{redo}--], "1.0",
+			    $cookies[-$self->{redo}]);
+		} else {
+			# persistent connection
+			foreach my $len (@lengths) {
+				my $cookie = shift @cookies;
+				http_request($self, $len, "1.1", $cookie);
+			}
+			# prepare for multiple connections
+			$self->{redo} = @lengths;
 		}
 	} else {
 		my $len = shift // $self->{len} // 251;
@@ -298,6 +307,7 @@ sub http_server {
 		}
 		IO::Handle::flush(\*STDOUT);
 	} while ($vers eq "1.1");
+	$self->{redo}-- if $self->{redo};
 }
 
 sub write_chunked {
