@@ -87,26 +87,38 @@ sub write_char {
 sub http_client {
 	my $self = shift;
 
-	if ($self->{lengths}) {
-		my @lengths = @{$self->{lengths}};
-		my @cookies = @{$self->{cookies} || []};
-		if ($self->{redo}) {
-			# multiple connections
-			http_request($self, $lengths[-$self->{redo}--], "1.0",
-			    $cookies[-$self->{redo}]);
-		} else {
-			# persistent connection
-			foreach my $len (@lengths) {
-				my $cookie = shift @cookies;
-				http_request($self, $len, "1.1", $cookie);
-			}
-			# prepare for multiple connections
-			$self->{redo} = @lengths;
-		}
-	} else {
+	unless ($self->{lengths}) {
+		# only a single http request
 		my $len = shift // $self->{len} // 251;
 		my $cookie = $self->{cookie};
 		http_request($self, $len, "1.0", $cookie);
+		return;
+	}
+
+	$self->{http_vers} ||= "1.1";
+	my @lengths = @{$self->{redo}{lengths} || $self->{lengths}};
+	my @cookies = @{$self->{redo}{cookies} || $self->{cookies} || []};
+	while (defined (my $len = shift @lengths)) {
+		my $cookie = shift @cookies || $self->{cookie};
+		eval { http_request($self, $len, $self->{http_vers}, $cookie) };
+		warn $@ if $@;
+		if (@lengths && ($@ || $self->{http_vers} eq "1.0")) {
+			# reconnect and redo the outstanding requests
+			$self->{redo} = {
+			    lengths => \@lengths,
+			    cookies => \@cookies,
+			};
+			return;
+		}
+	}
+	delete $self->{redo};
+	if ($self->{http_vers} eq "1.1") {
+		# run the tests again without persistence
+		$self->{http_vers} = "1.0";
+		$self->{redo} = {
+		    lengths => [@{$self->{lengths}}],
+		    cookies => [@{$self->{cookies} || []}],
+		};
 	}
 }
 
