@@ -86,11 +86,16 @@ sub write_char {
 
 sub http_client {
 	my $self = shift;
-	my @lengths = @{$self->{lengths} || [ shift // $self->{len} // 251 ]};
-	my @cookies = @{$self->{cookies} || [ $self->{cookie} || ()]};
 
-	foreach my $len (@lengths) {
-		my $cookie = shift @cookies;
+	if ($self->{lengths}) {
+		my @cookies = @{$self->{cookies} || []};
+		foreach my $len (@{$self->{lengths}}) {
+			my $cookie = shift @cookies;
+			http_request($self, $len, $cookie);
+		}
+	} else {
+		my $len = shift // $self->{len} // 251;
+		my $cookie = $self->{cookie};
 		http_request($self, $len, $cookie);
 	}
 }
