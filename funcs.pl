@@ -91,13 +91,10 @@ sub http_client {
 	my $method = $self->{method} || "GET";
 	my %header = %{$self->{header} || {}};
 	my @cookies = $self->{cookies} ? @{$self->{cookies}} :
-		($self->{cookie} ? @{$self->{cookie}} : ());
-	my $c = 0;
+	    ($self->{cookie} || "");
 
 	foreach my $len (@lengths) {
-		my $cookie = ($c < scalar(@cookies) && length($cookies[$c])) ?
-			$cookies[$c] : "";
-		++$c;
+		my $cookie = shift @cookies || "";
 		# encode the requested length or chunks into the url
 		my $path = ref($len) eq 'ARRAY' ? join("/", @$len) : $len;
 		# overwrite path with custom path
@@ -110,7 +107,7 @@ sub http_client {
 		    if $vers eq "1.1" && $method eq "PUT" &&
 		    !defined $header{'Content-Length'};
 		push @request, "$_: $header{$_}" foreach sort keys %header;
-		push @request, "Cookie: $cookie" if $cookie ne "";
+		push @request, "Cookie: $cookie" if $cookie;
 		push @request, "";
 		print STDERR map { ">>> $_\n" } @request;
 		print map { "$_\r\n" } @request;
@@ -260,10 +257,7 @@ sub http_server {
 					$1 == $len or die ref($self),
 					    " bad content length $1";
 				}
-				if ($cookie eq "" &&
-				    /^Cookie: (.*)/) {
-				    $cookie = $1;
-				}
+				$cookie ||= $1 if /^Cookie: (.*)/) {
 			}
 		}
 		# XXX reading to EOF does not work with relayd
@@ -281,8 +275,7 @@ sub http_server {
 			    if $vers eq "1.1" && $method eq "GET";
 		}
 		push @response, "$_: $header{$_} " foreach sort keys %header;
-		push @response, "Set-Cookie: $cookie"
-		    if $cookie ne "";
+		push @response, "Set-Cookie: $cookie" if $cookie;
 		push @response, "";
 
 		print STDERR map { ">>> $_\n" } @response;
