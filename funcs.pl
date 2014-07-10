@@ -376,6 +376,8 @@ sub check_logs {
 sub check_len {
 	my ($c, $r, $s, %args) = @_;
 
+	$args{len} ||= 251;
+
 	my @clen = $c->loggrep(qr/^LEN: /) or die "no client len"
 	    unless $args{client}{nocheck};
 	my @slen = $s->loggrep(qr/^LEN: /) or die "no server len"
