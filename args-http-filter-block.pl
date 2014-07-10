@@ -8,7 +8,7 @@ our %args = (
     client => {
 	func => \&http_client,
 	loggrep => qr/Client missing http 3 response/,
-        lengths => \@lengths,
+	lengths => \@lengths,
     },
     relayd => {
 	protocol => [ "http",
