@@ -67,7 +67,6 @@ sub child {
 	    or die ref($self), " $iosocket socket accept failed: $!";
 	print STDERR "accept sock: ",$as->sockhost()," ",$as->sockport(),"\n";
 	print STDERR "accept peer: ",$as->peerhost()," ",$as->peerport(),"\n";
-	print STDERR "single connection\n";
 
 	*STDIN = *STDOUT = $self->{as} = $as;
 }

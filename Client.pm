@@ -59,7 +59,6 @@ sub child {
 	) or die ref($self), " $iosocket socket connect failed: $!,$SSL_ERROR";
 	print STDERR "connect sock: ",$cs->sockhost()," ",$cs->sockport(),"\n";
 	print STDERR "connect peer: ",$cs->peerhost()," ",$cs->peerport(),"\n";
-	print STDERR "single connection\n";
 
 	*STDIN = *STDOUT = $self->{cs} = $cs;
 }
