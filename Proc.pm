@@ -66,6 +66,7 @@ sub new {
 	    or croak "$class func not given";
 	$self->{logfile}
 	    or croak "$class log file not given";
+	$self->{logfile} = "$$-". $self->{logfile};
 	open(my $fh, '>', $self->{logfile})
 	    or die "$class log file $self->{logfile} create failed: $!";
 	$fh->autoflush;

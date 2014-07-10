@@ -34,7 +34,7 @@ REMOTE_SSH ?=
 ARGS !=			cd ${.CURDIR} && ls args-*.pl
 TARGETS ?=		${ARGS}
 REGRESS_TARGETS =	${TARGETS:S/^/run-regress-/}
-CLEANFILES +=		*.log *.pem *.crt *.key relayd.conf ktrace.out stamp-*
+CLEANFILES +=		*.log *.pem *.crt *.key *relayd.conf ktrace.out stamp-*
 
 # Set variables so that make runs with and without obj directory.
 # Only do that if necessary to keep visible output short.
