@@ -18,7 +18,7 @@ our %args = (
 	],
 	loggrep => {
 	    qr/, (?:done|last write \(done\))/ => (1 + @lengths),
-	}
+	},
 	forwardssl => 1,
 	listenssl => 1,
     },
