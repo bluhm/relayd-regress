@@ -20,6 +20,7 @@ use warnings;
 package Proc;
 use Carp;
 use Errno;
+use File::Basename;
 use IO::File;
 use POSIX;
 use Time::HiRes qw(time alarm sleep);
@@ -104,12 +105,21 @@ sub run {
 	do {
 		$self->child();
 		print STDERR $self->{up}, "\n";
+		$self->{begin} = time();
 		$self->{func}->($self);
 	} while ($self->{redo});
+	$self->{end} = time();
 	print STDERR "Shutdown", "\n";
+	if ($self->{timefile}) {
+		open(my $fh, '>>', $self->{timefile})
+		    or die ref($self), " open $self->{timefile} failed: $!";
+		printf $fh "time='%s' test='%s' duration='%g'\n",
+		    scalar(localtime(time())), basename($self->{testfile}),
+		    $self->{end} - $self->{begin};
+	}
+
 	IO::Handle::flush(\*STDOUT);
 	IO::Handle::flush(\*STDERR);
-
 	POSIX::_exit(0);
 }
 

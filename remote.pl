@@ -100,22 +100,23 @@ my $redo = $args{lengths} && @{$args{lengths}};
 $redo = 0 if $args{client}{http_vers};  # run only one persistent connection
 my $s = Server->new(
     func                => \&read_char,
+    redo                => $redo,
     %{$args{server}},
     listendomain        => AF_INET,
     listenaddr          => ($mode eq "auto" ? $ARGV[1] : undef),
     listenport          => ($mode eq "manual" ? $ARGV[0] : undef),
-    redo                => $redo,
+    testfile            => $test,
 ) unless $args{server}{noserver};
 if ($mode eq "auto") {
 	$r = Remote->new(
 	    forward             => $ARGV[0],
 	    logfile             => "relayd.log",
-	    testfile            => $test,
 	    %{$args{relayd}},
 	    remotessh           => $ARGV[3],
 	    listenaddr          => $ARGV[2],
 	    connectaddr         => $ARGV[1],
 	    connectport         => $s ? $s->{listenport} : 1,
+	    testfile            => $test,
 	);
 	$r->run->up;
 }
@@ -125,6 +126,7 @@ my $c = Client->new(
     connectdomain       => AF_INET,
     connectaddr         => ($mode eq "manual" ? $ARGV[1] : $r->{listenaddr}),
     connectport         => ($mode eq "manual" ? $ARGV[2] : $r->{listenport}),
+    testfile            => $test,
 ) unless $args{client}{noclient};
 
 $s->run unless $args{server}{noserver};

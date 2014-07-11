@@ -48,6 +48,7 @@ my $s = Server->new(
     listenport          => $sport,
     redo                => $redo,
     %{$args{server}},
+    testfile            => $test,
 ) unless $args{server}{noserver};
 my $r = Relayd->new(
     forward             => $ARGV[0],
@@ -66,6 +67,7 @@ my $c = Client->new(
     connectaddr         => "127.0.0.1",
     connectport         => $rport,
     %{$args{client}},
+    testfile            => $test,
 ) unless $args{client}{noclient};
 
 $s->run unless $args{server}{noserver};

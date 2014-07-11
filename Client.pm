@@ -31,6 +31,7 @@ sub new {
 	my %args = @_;
 	$args{logfile} ||= "client.log";
 	$args{up} ||= "Connected";
+	$args{timefile} //= "time.log";
 	my $self = Proc::new($class, %args);
 	$self->{connectdomain}
 	    or croak "$class connect domain not given";
