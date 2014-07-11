@@ -48,7 +48,7 @@ sub new {
 	my %args = @_;
 	$args{logfile} ||= "remote.log";
 	$args{up} ||= "Started";
-	$args{down} ||= $args{dryrun} ? "no actions" : "parent terminating";
+	$args{down} ||= $args{dryrun} ? "relayd.conf" : "parent terminating";
 	$args{func} = sub { Carp::confess "$class func may not be called" };
 	$args{remotessh}
 	    or croak "$class remote ssh host not given";
