@@ -99,6 +99,7 @@ if ($mode eq "relay") {
 my $redo = $args{lengths} && @{$args{lengths}};
 $redo = 0 if $args{client}{http_vers};  # run only one persistent connection
 my $s = Server->new(
+    forward             => $ARGV[0],
     func                => \&read_char,
     redo                => $redo,
     %{$args{server}},
@@ -121,6 +122,7 @@ if ($mode eq "auto") {
 	$r->run->up;
 }
 my $c = Client->new(
+    forward             => $ARGV[0],
     func                => \&write_char,
     %{$args{client}},
     connectdomain       => AF_INET,

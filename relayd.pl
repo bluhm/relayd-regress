@@ -42,6 +42,7 @@ my $redo = $args{lengths} && @{$args{lengths}};
 $redo = 0 if $args{client}{http_vers};  # run only one persistent connection
 my($sport, $rport) = find_ports(num => 2);
 my $s = Server->new(
+    forward             => $ARGV[0],
     func                => \&read_char,
     listendomain        => AF_INET,
     listenaddr          => "127.0.0.1",
@@ -62,6 +63,7 @@ my $r = Relayd->new(
     testfile            => $test,
 );
 my $c = Client->new(
+    forward             => $ARGV[0],
     func                => \&write_char,
     connectdomain       => AF_INET,
     connectaddr         => "127.0.0.1",

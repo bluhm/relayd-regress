@@ -113,9 +113,10 @@ sub run {
 	if ($self->{timefile}) {
 		open(my $fh, '>>', $self->{timefile})
 		    or die ref($self), " open $self->{timefile} failed: $!";
-		printf $fh "time='%s' test='%s' duration='%g'\n",
-		    scalar(localtime(time())), basename($self->{testfile}),
-		    $self->{end} - $self->{begin};
+		printf $fh "time='%s' duration='%.10g' ".
+		    "forward='%s' test='%s'\n",
+		    scalar(localtime(time())), $self->{end} - $self->{begin},
+		    $self->{forward}, basename($self->{testfile});
 	}
 
 	IO::Handle::flush(\*STDOUT);
