@@ -49,7 +49,7 @@ sub new {
 	my $test = basename($self->{testfile} || "");
 	# ssl does not allow a too long session id, so truncate it
 	substr($test, 25, length($test) - 25, "") if length($test) > 25;
-	$self->{conffile} = "$$-". $self->{conffile};
+	$self->{conffile} = "$$-$self->{conffile}" if $ENV{MAKEFLAGS} =~ /-j/;
 	open(my $fh, '>', $self->{conffile})
 	    or die ref($self), " conf file $self->{conffile} create failed: $!";
 	print $fh "log all\n";
