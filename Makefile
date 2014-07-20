@@ -87,6 +87,10 @@ ${REGRESS_TARGETS:M*ssl*} ${REGRESS_TARGETS:M*https*}: 127.0.0.1.crt
 ${REGRESS_TARGETS:M*ssl*} ${REGRESS_TARGETS:M*https*}: ${REMOTE_ADDR}.crt
 .endif
 
+.PHONY: parallel
+
+parallel: ${REGRESS_TARGETS}
+
 # make perl syntax check for all args files
 
 .PHONY: syntax
