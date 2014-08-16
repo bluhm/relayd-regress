@@ -92,15 +92,15 @@ sub child {
 	my @ktrace = $ENV{KTRACE} ? "KTRACE=$ENV{KTRACE}" : ();
 	my @relayd = $ENV{RELAYD} ? "RELAYD=$ENV{RELAYD}" : ();
 	my $curdir = dirname($0) || ".";
-	$curdir = getcwd() if $curdir eq '.';
-	my @cmd = ('ssh', @opts, $self->{remotessh},
-	    @sudo, @ktrace, @relayd, 'perl',
-	    '-I', $curdir, "$curdir/".basename($0), $self->{forward},
+	$curdir = getcwd() if $curdir eq ".";
+	my @cmd = ("ssh", @opts, $self->{remotessh},
+	    @sudo, @ktrace, @relayd, "perl",
+	    "-I", $curdir, "$curdir/".basename($0), $self->{forward},
 	    $self->{listenaddr}, $self->{connectaddr}, $self->{connectport},
 	    ($self->{testfile} ? "$curdir/".basename($self->{testfile}) : ()));
 	print STDERR "execute: @cmd\n";
 	exec @cmd;
-	die "Exec @cmd failed: $!";
+	die "Exec '@cmd' failed: $!";
 }
 
 sub close_child {
