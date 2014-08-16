@@ -26,7 +26,7 @@ sub new {
 	my $class = shift;
 	my %args = @_;
 	$args{logfile} ||= "relayd.log";
-	$args{up} ||= "Started";
+	$args{up} ||= $args{dryrun} || "relay_launch: ";
 	$args{down} ||= $args{dryrun} ? "relayd.conf:" : "parent terminating";
 	$args{func} = sub { Carp::confess "$class func may not be called" };
 	$args{conffile} ||= "relayd.conf";
@@ -98,19 +98,8 @@ sub new {
 	return $self;
 }
 
-sub up {
-	my $self = Proc::up(shift, @_);
-	my $timeout = shift || 10;
-	my $regex = $self->{dryrun} || "relay_launch: ";
-	$self->loggrep(qr/$regex/, $timeout)
-	    or croak ref($self), " no $regex in $self->{logfile} ".
-		"after $timeout seconds";
-	return $self;
-}
-
 sub child {
 	my $self = shift;
-	print STDERR $self->{up}, "\n";
 	my @sudo = $ENV{SUDO} ? $ENV{SUDO} : ();
 	my @ktrace = $ENV{KTRACE} ? ($ENV{KTRACE}, "-i") : ();
 	my $relayd = $ENV{RELAYD} ? $ENV{RELAYD} : "relayd";
