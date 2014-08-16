@@ -47,7 +47,7 @@ sub new {
 	my $class = shift;
 	my %args = @_;
 	$args{logfile} ||= "remote.log";
-	$args{up} ||= "Started";
+	$args{up} ||= "listen sock: ";
 	$args{down} ||= $args{dryrun} ? "relayd.conf" : "parent terminating";
 	$args{func} = sub { Carp::confess "$class func may not be called" };
 	$args{remotessh}
@@ -72,10 +72,8 @@ sub run {
 
 sub up {
 	my $self = Proc::up(shift, @_);
-	my $timeout = shift || 10;
-	my $lsock = $self->loggrep(qr/^listen sock: /, $timeout)
-	    or croak ref($self), " no listen sock in $self->{logfile} ".
-		"after $timeout seconds";
+	my $lsock = $self->loggrep(qr/^listen sock: /)
+	    or croak ref($self), " no listen sock in $self->{logfile}";
 	my($addr, $port) = $lsock =~ /: (\S+) (\S+)$/
 	    or croak ref($self), " no listen addr and port in $self->{logfile}";
 	$self->{listenaddr} = $addr;
@@ -85,8 +83,6 @@ sub up {
 
 sub child {
 	my $self = shift;
-
-	print STDERR $self->{up}, "\n";
 	my @opts = split(' ', $ENV{SSH_OPTIONS}) if $ENV{SSH_OPTIONS};
 	my @sudo = $ENV{SUDO} ? "SUDO=$ENV{SUDO}" : ();
 	my @ktrace = $ENV{KTRACE} ? "KTRACE=$ENV{KTRACE}" : ();
