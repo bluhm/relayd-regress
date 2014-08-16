@@ -1,6 +1,6 @@
 #	$OpenBSD: Relayd.pm,v 1.11 2014/07/10 22:33:44 bluhm Exp $
 
-# Copyright (c) 2010-2012 Alexander Bluhm <bluhm@openbsd.org>
+# Copyright (c) 2010-2014 Alexander Bluhm <bluhm@openbsd.org>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -103,10 +103,10 @@ sub child {
 	my @sudo = $ENV{SUDO} ? $ENV{SUDO} : ();
 	my @ktrace = $ENV{KTRACE} ? ($ENV{KTRACE}, "-i") : ();
 	my $relayd = $ENV{RELAYD} ? $ENV{RELAYD} : "relayd";
-	my @cmd = (@sudo, @ktrace, $relayd, '-dvv', '-f', $self->{conffile});
+	my @cmd = (@sudo, @ktrace, $relayd, "-dvv", "-f", $self->{conffile});
 	print STDERR "execute: @cmd\n";
 	exec @cmd;
-	die "Exec @cmd failed: $!";
+	die "Exec '@cmd' failed: $!";
 }
 
 1;
