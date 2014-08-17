@@ -439,8 +439,7 @@ sub check_loggrep {
 
 	my %name2proc = (client => $c, relayd => $r, server => $s);
 	foreach my $name (qw(client relayd server)) {
-		my $p = $name2proc{$name}
-		    or next;
+		my $p = $name2proc{$name} or next;
 		my $pattern = $args{$name}{loggrep} or next;
 		$pattern = [ $pattern ] unless ref($pattern) eq 'ARRAY';
 		foreach my $pat (@$pattern) {
