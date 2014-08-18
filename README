@@ -1,9 +1,9 @@
 Run relayd regressions tests.  The framework runs a client, and a
 server, and a relayd.  Currently the tcp and http forwarding code
-path is covered.  Each test starts those three processes with a
-special relayd.conf.  The test arguments are kept in the args-*.pl
-files.  All processes write log files that are checked for certain
-messages.
+path is covered.  Each test creates a special relayd.conf and starts
+those three processes.  All processes write log files that are
+checked for certain messages.  The test arguments are kept in the
+args-*.pl files.
 
 SUDO=sudo
 As relayd needs root privileges either run the tests as root or set
