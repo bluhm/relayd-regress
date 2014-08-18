@@ -1,4 +1,4 @@
-#	$OpenBSD: Remote.pm,v 1.4 2014/07/11 16:13:11 bluhm Exp $
+#	$OpenBSD: Remote.pm,v 1.5 2014/08/18 22:58:19 bluhm Exp $
 
 # Copyright (c) 2010-2014 Alexander Bluhm <bluhm@openbsd.org>
 #

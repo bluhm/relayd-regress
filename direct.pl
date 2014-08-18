@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#	$OpenBSD: direct.pl,v 1.2 2013/01/04 14:01:49 bluhm Exp $
+#	$OpenBSD: direct.pl,v 1.3 2014/08/18 22:58:19 bluhm Exp $
 
 # Copyright (c) 2010-2014 Alexander Bluhm <bluhm@openbsd.org>
 #
