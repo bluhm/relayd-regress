@@ -447,12 +447,12 @@ sub check_loggrep {
 				while (my($re, $num) = each %$pat) {
 					my @matches = $p->loggrep($re);
 					@matches == $num
-					    or die "$name matches @matches: ",
-					    "$re => $num";
+					    or die "$name matches '@matches': ",
+					    "'$re' => $num";
 				}
 			} else {
 				$p->loggrep($pat)
-				    or die "$name log missing pattern: $pat";
+				    or die "$name log missing pattern: '$pat'";
 			}
 		}
 	}
