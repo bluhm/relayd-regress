@@ -77,9 +77,9 @@ sub run {
 	my $self = shift;
 
 	pipe(my $reader, my $writer)
-	    or die ref($self), " pipe to child failed";
+	    or die ref($self), " pipe to child failed: $!";
 	defined(my $pid = fork())
-	    or die ref($self), " fork child failed";
+	    or die ref($self), " fork child failed: $!";
 	if ($pid) {
 		$CHILDREN{$pid} = 1;
 		$self->{pid} = $pid;
