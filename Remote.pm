@@ -73,7 +73,7 @@ sub run {
 sub up {
 	my $self = Proc::up(shift, @_);
 	my $lsock = $self->loggrep(qr/^listen sock: /)
-	    or croak ref($self), " no listen sock in $self->{logfile}";
+	    or croak ref($self), " no 'listen sock: ' in $self->{logfile}";
 	my($addr, $port) = $lsock =~ /: (\S+) (\S+)$/
 	    or croak ref($self), " no listen addr and port in $self->{logfile}";
 	$self->{listenaddr} = $addr;
