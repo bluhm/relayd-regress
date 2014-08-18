@@ -96,7 +96,7 @@ sub child {
 	    ($self->{testfile} ? "$curdir/".basename($self->{testfile}) : ()));
 	print STDERR "execute: @cmd\n";
 	exec @cmd;
-	die "Exec '@cmd' failed: $!";
+	die ref($self), " exec '@cmd' failed: $!";
 }
 
 sub close_child {

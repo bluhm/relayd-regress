@@ -106,7 +106,7 @@ sub child {
 	my @cmd = (@sudo, @ktrace, $relayd, "-dvv", "-f", $self->{conffile});
 	print STDERR "execute: @cmd\n";
 	exec @cmd;
-	die "Exec '@cmd' failed: $!";
+	die ref($self), " exec '@cmd' failed: $!";
 }
 
 1;
