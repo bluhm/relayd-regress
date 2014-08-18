@@ -3,7 +3,8 @@ server, and a relayd.  Currently the tcp and http forwarding code
 path is covered.  Each test creates a special relayd.conf and starts
 those three processes.  All processes write log files that are
 checked for certain messages.  The test arguments are kept in the
-args-*.pl files.
+args-*.pl files.  To find socket splicing bugs, each test is run
+in both copy and splice mode.
 
 SUDO=sudo
 As relayd needs root privileges either run the tests as root or set
