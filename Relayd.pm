@@ -47,7 +47,7 @@ sub new {
 	    or croak "$class connect port not given";
 
 	my $test = basename($self->{testfile} || "");
-	# ssl does not allow a too long session id, so truncate it
+	# tls does not allow a too long session id, so truncate it
 	substr($test, 25, length($test) - 25, "") if length($test) > 25;
 	open(my $fh, '>', $self->{conffile})
 	    or die ref($self), " conf file $self->{conffile} create failed: $!";
@@ -82,11 +82,11 @@ sub new {
 	print $fh  "relay relay-$test {";
 	print $fh  "\n\tprotocol proto-$test"
 	    unless grep { /^protocol / } @relay;
-	my $ssl = $self->{listenssl} ? " ssl" : "";
+	my $tls = $self->{listenssl} ? " tls" : "";
 	print $fh  "\n\tlisten on $self->{listenaddr} ".
-	    "port $self->{listenport}$ssl" unless grep { /^listen / } @relay;
-	my $withssl = $self->{forwardssl} ? " with ssl" : "";
-	print $fh  "\n\tforward$withssl to $self->{connectaddr} ".
+	    "port $self->{listenport}$tls" unless grep { /^listen / } @relay;
+	my $withtls = $self->{forwardssl} ? " with tls" : "";
+	print $fh  "\n\tforward$withtls to $self->{connectaddr} ".
 	    "port $self->{connectport}" unless grep { /^forward / } @relay;
 	# substitute variables in config file
 	foreach (@relay) {
