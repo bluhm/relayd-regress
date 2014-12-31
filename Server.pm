@@ -1,4 +1,4 @@
-#	$OpenBSD: Server.pm,v 1.6 2014/07/10 10:19:06 bluhm Exp $
+#	$OpenBSD: Server.pm,v 1.7 2014/12/31 01:25:07 bluhm Exp $
 
 # Copyright (c) 2010-2014 Alexander Bluhm <bluhm@openbsd.org>
 #
