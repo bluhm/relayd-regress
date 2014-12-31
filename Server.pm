@@ -20,7 +20,7 @@ use warnings;
 package Server;
 use parent 'Proc';
 use Carp;
-use Socket qw(IPPROTO_TCP TCP_NODELAY);
+use Socket;
 use Socket6;
 use IO::Socket;
 use IO::Socket::INET6;
