@@ -175,8 +175,12 @@ sub http_request {
 			print STDERR "<<< $_\n";
 			last if /^$/;
 			if (/^Content-Length: (.*)/) {
-				$1 == $len or die ref($self),
-				    " bad content length $1";
+				if ($self->{httpnok}) {
+					$len = $1;
+				} else {
+					$1 == $len or die ref($self),
+					    " bad content length $1";
+				}
 			}
 			if (/^Transfer-Encoding: chunked$/) {
 				$chunked = 1;
