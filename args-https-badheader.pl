@@ -1,5 +1,6 @@
 # test https connection over http relay
 # The client writes an incomplete header and closes the connection.
+# Check that the relay establishes and also closes the session.
 
 use strict;
 use warnings;
@@ -19,7 +20,10 @@ our %args = (
 	],
 	forwardssl => 1,
 	listenssl => 1,
-
+	loggrep => {
+	    qr/session 1 established/ => 1,
+	    qr/session 1 .*, done/ => 1,
+	},
     },
     server => {
 	noserver => 1,
