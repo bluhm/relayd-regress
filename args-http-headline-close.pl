@@ -18,7 +18,6 @@ our %args = (
 	    "match response header log bar",
 	],
 	loggrep => {
-	    qr/session 1 established/ => 1,
 	    qr/session 1 .*, done/ => 1,
 	},
     },
