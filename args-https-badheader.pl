@@ -1,11 +1,15 @@
 # test https connection over http relay
+# The client writes an incomplete header and closes the connection.
 
 use strict;
 use warnings;
 
 our %args = (
     client => {
-	func => \&http_client,
+	func => sub {
+	    print "GET ";  # missing new line
+	},
+	nocheck => 1,
 	ssl => 1,
     },
     relayd => {
@@ -18,11 +22,9 @@ our %args = (
 
     },
     server => {
-	func => \&http_server,
-	ssl => 1,
+	noserver => 1,
+	nocheck => 1,
     },
-    len => 251,
-    md5 => "bc3a3f39af35fe5b1687903da2b00c7f",
 );
 
 1;
