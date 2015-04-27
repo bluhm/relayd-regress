@@ -1,4 +1,4 @@
-# test https connection over http relay
+# test http connection over http relay
 # The client writes an incomplete header and closes the connection.
 # Check that the relay establishes and also closes the session.
 
@@ -11,15 +11,12 @@ our %args = (
 	    print "GET ";  # missing new line
 	},
 	nocheck => 1,
-	ssl => 1,
     },
     relayd => {
 	protocol => [ "http",
 	    "match request header log foo",
 	    "match response header log bar",
 	],
-	forwardssl => 1,
-	listenssl => 1,
 	loggrep => {
 	    qr/session 1 established/ => 1,
 	    qr/session 1 .*, done/ => 1,
