@@ -1,6 +1,6 @@
 # test http connection over http relay
-# The client writes an incomplete header line and closes the connection.
-# Check that the relay establishes and also closes the session.
+# The client writes an bad header line and an additional line.
+# Check that the relay handles the next line after the error correctly.
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use warnings;
 our %args = (
     client => {
 	func => sub {
-	    print "GET ";  # missing new line
+	    print "GET /index.html HTTP\nHost: foo.example.com";  # no version
 	},
 	nocheck => 1,
     },
