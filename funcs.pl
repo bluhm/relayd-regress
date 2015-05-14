@@ -92,7 +92,7 @@ sub http_client {
 		my $len = shift // $self->{len} // 251;
 		my $cookie = $self->{cookie};
 		http_request($self, $len, "1.0", $cookie);
-		http_response($self, $len, "1.0");
+		http_response($self, $len);
 		return;
 	}
 
@@ -104,7 +104,7 @@ sub http_client {
 		my $cookie = shift @cookies || $self->{cookie};
 		eval {
 			http_request($self, $len, $vers, $cookie);
-			http_response($self, $len, $vers);
+			http_response($self, $len);
 		};
 		warn $@ if $@;
 		if (@lengths && ($@ || $vers eq "1.0")) {
@@ -165,9 +165,10 @@ sub http_request {
 }
 
 sub http_response {
-	my ($self, $len, $vers) = @_;
+	my ($self, $len) = @_;
 	my $method = $self->{method} || "GET";
 
+	my $vers;
 	my $chunked = 0;
 	{
 		local $/ = "\r\n";
@@ -176,9 +177,10 @@ sub http_response {
 		    or die ref($self), " missing http $len response";
 		chomp;
 		print STDERR "<<< $_\n";
-		m{^HTTP/$vers 200 OK$}
+		m{^HTTP/(\d\.\d) 200 OK$}
 		    or die ref($self), " http response not ok"
 		    unless $self->{httpnok};
+		$vers = $1;
 		while (<STDIN>) {
 			chomp;
 			print STDERR "<<< $_\n";
