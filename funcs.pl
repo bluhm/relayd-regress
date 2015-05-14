@@ -92,6 +92,7 @@ sub http_client {
 		my $len = shift // $self->{len} // 251;
 		my $cookie = $self->{cookie};
 		http_request($self, $len, "1.0", $cookie);
+		http_response($self, $len, "1.0");
 		return;
 	}
 
@@ -101,7 +102,10 @@ sub http_client {
 	my @cookies = @{$self->{redo}{cookies} || $self->{cookies} || []};
 	while (defined (my $len = shift @lengths)) {
 		my $cookie = shift @cookies || $self->{cookie};
-		eval { http_request($self, $len, $vers, $cookie) };
+		eval {
+			http_request($self, $len, $vers, $cookie);
+			http_response($self, $len, $vers);
+		};
 		warn $@ if $@;
 		if (@lengths && ($@ || $vers eq "1.0")) {
 			# reconnect and redo the outstanding requests
@@ -158,6 +162,11 @@ sub http_request {
 	#shutdown(\*STDOUT, SHUT_WR)
 	#    or die ref($self), " shutdown write failed: $!"
 	#    if $vers ne "1.1";
+}
+
+sub http_response {
+	my ($self, $len, $vers) = @_;
+	my $method = $self->{method} || "GET";
 
 	my $chunked = 0;
 	{
