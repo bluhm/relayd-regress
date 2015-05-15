@@ -140,9 +140,15 @@ sub http_request {
 	}
 	my @request = ("$method /$path HTTP/$vers");
 	push @request, "Host: foo.bar" unless defined $header{Host};
-	push @request, "Content-Length: $len"
-	    if $vers eq "1.1" && $method eq "PUT" &&
-	    !defined $header{'Content-Length'};
+	if ($vers eq "1.1" && $method eq "PUT") {
+		if (ref($len) eq 'ARRAY') {
+			push @request, "Transfer-Encoding: chunked"
+			    if !defined $header{'Transfer-Encoding'};
+		} else {
+			push @request, "Content-Length: $len"
+			    if !defined $header{'Content-Length'};
+		}
+	}
 	foreach my $key (sort keys %header) {
 		my $val = $header{$key};
 		if (ref($val) eq 'ARRAY') {
@@ -332,12 +338,12 @@ sub http_server {
 
 		my @response = ("HTTP/$vers 200 OK");
 		$len = defined($len) ? $len : scalar(split /|/,$url);
-		if (ref($len) eq 'ARRAY') {
-			push @response, "Transfer-Encoding: chunked"
-			    if $vers eq "1.1";
-		} else {
-			push @response, "Content-Length: $len"
-			    if $vers eq "1.1" && $method eq "GET";
+		if ($vers eq "1.1" && $method eq "GET") {
+			if (ref($len) eq 'ARRAY') {
+				push @response, "Transfer-Encoding: chunked";
+			} else {
+				push @response, "Content-Length: $len";
+			}
 		}
 		foreach my $key (sort keys %header) {
 			my $val = $header{$key};
