@@ -1,5 +1,5 @@
 # test https connection over http relay
-# The client writes an bad header line and an additional line.
+# The client writes a bad header line and an additional line.
 # Check that the relay handles the next line after the error correctly.
 
 use strict;
