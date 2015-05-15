@@ -407,6 +407,8 @@ sub check_logs {
 	check_len($c, $r, $s, %args);
 	check_md5($c, $r, $s, %args);
 	check_loggrep($c, $r, $s, %args);
+	$r->loggrep("lost child")
+	    and die "relayd lost child";
 }
 
 sub check_len {
