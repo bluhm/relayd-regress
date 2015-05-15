@@ -1,4 +1,4 @@
-# test chunked http 1.1 connection over http relay
+# test chunked http request over http relay
 
 use strict;
 use warnings;
@@ -9,14 +9,15 @@ our %args = (
 	func => \&http_client,
 	lengths => \@lengths,
 	http_vers => ["1.1"],
+	method => "PUT",
     },
     relayd => {
 	protocol => [ "http",
-	    "match request header log foo",
-	    "match response header log Transfer-Encoding",
+	    "match request header log Transfer-Encoding",
+	    "match response header log bar",
 	],
 	loggrep => {
-		"{Transfer-Encoding: chunked}" => 1,
+		qr/\[Transfer-Encoding: chunked\]/ => 1,
 		qr/\[\(null\)\]/ => 0,
 	},
     },
