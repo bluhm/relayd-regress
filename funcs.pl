@@ -331,10 +331,13 @@ sub http_server {
 				$cookie ||= $1 if /^Cookie: (.*)/;
 			}
 		}
-		# XXX reading to EOF does not work with relayd
-		#read_char($self, $vers eq "1.1" ? $len : undef)
-		read_char($self, $len)
-		    if $method eq "PUT";
+		if ($method eq "PUT" ) {
+			if (ref($len) eq 'ARRAY') {
+				read_chunked($self);
+			} else {
+				read_char($self, $len);
+			}
+		}
 
 		my @response = ("HTTP/$vers 200 OK");
 		$len = defined($len) ? $len : scalar(split /|/,$url);
