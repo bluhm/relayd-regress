@@ -156,7 +156,17 @@ sub http_request {
 	push @request, "";
 	print STDERR map { ">>> $_\n" } @request;
 	print map { "$_\r\n" } @request;
-	write_char($self, $len) if $method eq "PUT";
+	if ($method eq "PUT") {
+		if (ref($len) eq 'ARRAY') {
+			if ($vers eq "1.1") {
+				write_chunked($self, @$len);
+			} else {
+				write_char($self, $_) foreach (@$len);
+			}
+		} else {
+			write_char($self, $len);
+		}
+	}
 	IO::Handle::flush(\*STDOUT);
 	# XXX client shutdown seems to be broken in relayd
 	#shutdown(\*STDOUT, SHUT_WR)
@@ -344,14 +354,16 @@ sub http_server {
 		print STDERR map { ">>> $_\n" } @response;
 		print map { "$_\r\n" } @response;
 
-		if (ref($len) eq 'ARRAY') {
-			if ($vers eq "1.1") {
-				write_chunked($self, @$len);
+		if ($method eq "GET") {
+			if (ref($len) eq 'ARRAY') {
+				if ($vers eq "1.1") {
+					write_chunked($self, @$len);
+				} else {
+					write_char($self, $_) foreach (@$len);
+				}
 			} else {
-				write_char($self, $_) foreach (@$len);
+				write_char($self, $len);
 			}
-		} else {
-			write_char($self, $len) if $method eq "GET";
 		}
 		IO::Handle::flush(\*STDOUT);
 	} while ($vers eq "1.1");
