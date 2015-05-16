@@ -5,27 +5,28 @@
 use strict;
 use warnings;
 
-my @lengths = (4, 3);
+my @lengths = ([4, 3]);
 our %args = (
     client => {
 	func => sub {
 	    my $self = shift;
 	    print <<'EOF';
-PUT /server-check-content-length-4.html HTTP/1.1
-Content-Length: 4
+PUT /server-check-chunks-length-4-3.html HTTP/1.1
 Host: foo.bar
+Transfer-Encoding: chunked
 
+4
 123
-XXX
-PUT /server-check-content-length-3.html HTTP/1.1
-Host: foo.bar
-Content-Length: 3
 
+XXX 3
 12
+
+0
+
 EOF
 	    print STDERR "LEN: 4\n";
 	    print STDERR "LEN: 3\n";
-	    # relayd does not forward the first request if the second one
+	    # relayd does not forward the first chunk if the second one
 	    # is invalid.  So do not expect any response.
 	    #http_response($self, "without len");
 	},
@@ -39,13 +40,11 @@ EOF
 	    "match response header log bar",
 	],
 	loggrep => {
-	    qr/, malformed, PUT/ => 1,
+	    qr/, invalid chunk size, PUT/ => 1,
 	},
     },
     server => {
 	func => \&http_server,
-	# The server does not get any connection.
-	noserver => 1,
 	nocheck => 1,
     },
     lengths => \@lengths,
