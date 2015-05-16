@@ -52,6 +52,7 @@ sub new {
 	open(my $fh, '>', $self->{conffile})
 	    or die ref($self), " conf file $self->{conffile} create failed: $!";
 	print $fh "log all\n";
+	print $fh "prefork 1\n";  # only crashes of first child are observed
 	print $fh "table <table-$test> { $self->{connectaddr} }\n"
 	    if defined($self->{table});
 
