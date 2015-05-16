@@ -39,7 +39,7 @@ EOF
 	    "match response header log bar",
 	],
 	loggrep => {
-# XXX	    qr/, malformed, PUT/ => 1,
+	    qr/, malformed, PUT/ => 1,
 	},
     },
     server => {
