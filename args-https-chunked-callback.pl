@@ -49,7 +49,8 @@ EOF
     },
     server => {
 	func => \&http_server,
-	ssl => 1,
+	# relayd only connects but does no ssl handshake
+	#ssl => 1,
 	nocheck => 1,
     },
     lengths => \@lengths,
