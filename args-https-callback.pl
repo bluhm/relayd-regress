@@ -1,4 +1,4 @@
-# test http connection over http relay invoking the callback.
+# test https connection over http relay invoking the callback.
 # The client uses a bad method in the second request.
 # Check that the relay handles the input after the error correctly.
 
@@ -29,6 +29,7 @@ EOF
 	    # is invalid.  So do not expect any response.
 	    #http_response($self, "without len");
 	},
+	ssl => 1,
 	http_vers => ["1.1"],
 	lengths => \@lengths,
 	method => "PUT",
@@ -38,12 +39,15 @@ EOF
 	    "match request header log foo",
 	    "match response header log bar",
 	],
+	forwardssl => 1,
+	listenssl => 1,
 	loggrep => {
 	    qr/, malformed, PUT/ => 1,
 	},
     },
     server => {
 	func => \&http_server,
+	ssl => 1,
 	# The server does not get any connection.
 	noserver => 1,
 	nocheck => 1,

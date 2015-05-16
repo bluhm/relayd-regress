@@ -1,4 +1,4 @@
-# test chunked http connection over http relay invoking the callback
+# test chunked https connection over http relay invoking the callback
 # The client writes a bad chunk length in the second chunk.
 # Check that the relay handles the input after the error correctly.
 
@@ -31,6 +31,7 @@ EOF
 	    # is invalid.  So do not expect any response.
 	    #http_response($self, "without len");
 	},
+	ssl => 1,
 	http_vers => ["1.1"],
 	lengths => \@lengths,
 	method => "PUT",
@@ -40,12 +41,15 @@ EOF
 	    "match request header log foo",
 	    "match response header log bar",
 	],
+	forwardssl => 1,
+	listenssl => 1,
 	loggrep => {
 	    qr/, invalid chunk size, PUT/ => 1,
 	},
     },
     server => {
 	func => \&http_server,
+	ssl => 1,
 	nocheck => 1,
     },
     lengths => \@lengths,
