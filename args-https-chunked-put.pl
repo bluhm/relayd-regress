@@ -1,4 +1,4 @@
-# test chunked http request over http relay
+# test chunked https request over http relay
 
 use strict;
 use warnings;
@@ -7,6 +7,7 @@ my @lengths = ([ 251, 10000, 10 ], 1, [2, 3]);
 our %args = (
     client => {
 	func => \&http_client,
+	ssl => 1,
 	lengths => \@lengths,
 	http_vers => ["1.1"],
 	method => "PUT",
@@ -16,6 +17,8 @@ our %args = (
 	    "match request header log Transfer-Encoding",
 	    "match response header log bar",
 	],
+	forwardssl => 1,
+	listenssl => 1,
 	loggrep => {
 		qr/\[Transfer-Encoding: chunked\]/ => 1,
 		qr/\[\(null\)\]/ => 0,
@@ -23,6 +26,7 @@ our %args = (
     },
     server => {
 	func => \&http_server,
+	ssl => 1,
     },
     lengths => \@lengths,
     md5 => [
