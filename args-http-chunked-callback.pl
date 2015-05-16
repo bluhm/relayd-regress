@@ -1,6 +1,6 @@
-# test http connection with chunks over http relay
-# The client writes a bad header line and an additional line.
-# Check that the relay handles the next line after the error correctly.
+# test chunked http connection over http relay invoking the callback
+# The client writes a bad chunk length in the second chunk.
+# Check that the relay handles the input after the error correctly.
 
 use strict;
 use warnings;
@@ -11,14 +11,15 @@ our %args = (
 	func => sub {
 	    my $self = shift;
 	    print <<'EOF';
-PUT /server-check-chunks-length-4-3.html HTTP/1.1
+PUT /4/3 HTTP/1.1
 Host: foo.bar
 Transfer-Encoding: chunked
 
 4
 123
 
-XXX 3
+XXX
+3
 12
 
 0

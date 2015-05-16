@@ -1,6 +1,6 @@
-# test http connection over http relay invoking the callback.
+# test persistent http connection over http relay invoking the callback
 # The client writes a bad header line in the second request.
-# Check that the relay handles the next line after the error correctly.
+# Check that the relay handles the input after the error correctly.
 
 use strict;
 use warnings;
@@ -39,7 +39,7 @@ EOF
 	    "match response header log bar",
 	],
 	loggrep => {
-	    qr/, malformed, PUT/ => 1,
+# XXX	    qr/, malformed, PUT/ => 1,
 	},
     },
     server => {
