@@ -1,5 +1,5 @@
-# test persistent http connection over http relay invoking the callback
-# The client writes a bad header line in the second request.
+# test http connection over http relay invoking the callback.
+# The client uses a bad method in the second request.
 # Check that the relay handles the input after the error correctly.
 
 use strict;
@@ -16,8 +16,8 @@ Host: foo.bar
 Content-Length: 4
 
 123
-PUT /3 HTTP/1.1
 XXX
+PUT /3 HTTP/1.1
 Host: foo.bar
 Content-Length: 3
 

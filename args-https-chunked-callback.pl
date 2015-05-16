@@ -1,31 +1,33 @@
-# test persistent http connection over http relay invoking the callback
-# The client writes a bad header line in the second request.
+# test chunked http connection over http relay invoking the callback
+# The client writes a bad chunk length in the second chunk.
 # Check that the relay handles the input after the error correctly.
 
 use strict;
 use warnings;
 
-my @lengths = (4, 3);
+my @lengths = ([4, 3]);
 our %args = (
     client => {
 	func => sub {
 	    my $self = shift;
 	    print <<'EOF';
-PUT /4 HTTP/1.1
+PUT /4/3 HTTP/1.1
 Host: foo.bar
-Content-Length: 4
+Transfer-Encoding: chunked
 
+4
 123
-PUT /3 HTTP/1.1
-XXX
-Host: foo.bar
-Content-Length: 3
 
+XXX
+3
 12
+
+0
+
 EOF
 	    print STDERR "LEN: 4\n";
 	    print STDERR "LEN: 3\n";
-	    # relayd does not forward the first request if the second one
+	    # relayd does not forward the first chunk if the second one
 	    # is invalid.  So do not expect any response.
 	    #http_response($self, "without len");
 	},
@@ -39,13 +41,11 @@ EOF
 	    "match response header log bar",
 	],
 	loggrep => {
-	    qr/, malformed, PUT/ => 1,
+	    qr/, invalid chunk size, PUT/ => 1,
 	},
     },
     server => {
 	func => \&http_server,
-	# The server does not get any connection.
-	noserver => 1,
 	nocheck => 1,
     },
     lengths => \@lengths,
