@@ -1,4 +1,4 @@
-#	$OpenBSD: Relayd.pm,v 1.14 2015/05/17 22:49:03 bluhm Exp $
+#	$OpenBSD: Relayd.pm,v 1.15 2015/05/22 19:09:18 bluhm Exp $
 
 # Copyright (c) 2010-2015 Alexander Bluhm <bluhm@openbsd.org>
 #

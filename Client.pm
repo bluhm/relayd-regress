@@ -1,4 +1,4 @@
-#	$OpenBSD: Client.pm,v 1.9 2014/12/31 01:25:07 bluhm Exp $
+#	$OpenBSD: Client.pm,v 1.10 2015/05/22 19:09:18 bluhm Exp $
 
 # Copyright (c) 2010-2015 Alexander Bluhm <bluhm@openbsd.org>
 #
