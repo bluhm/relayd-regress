@@ -67,7 +67,7 @@ run-regress-$a: $a
 # create certificates for TLS
 
 .for ip in ${REMOTE_ADDR} 127.0.0.1
-${ip}.crt:
+${ip}.crt: ca.crt
 	openssl req -batch -new -subj /L=OpenBSD/O=relayd-regress/OU=relay/CN=${ip}/ -nodes -newkey rsa -keyout ${ip}.key -x509 -out $@
 .if empty (REMOTE_SSH)
 	${SUDO} cp 127.0.0.1.crt /etc/ssl/
@@ -75,6 +75,7 @@ ${ip}.crt:
 .else
 	scp ${REMOTE_ADDR}.crt root@${REMOTE_SSH}:/etc/ssl/
 	scp ${REMOTE_ADDR}.key root@${REMOTE_SSH}:/etc/ssl/private/
+	scp ca.crt ca.key ${REMOTE_SSH}:
 .endif
 .endfor
 
