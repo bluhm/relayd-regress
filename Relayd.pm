@@ -72,14 +72,14 @@ sub new {
 	    die ref($self), " invalid forward $self->{forward}"
 	    unless grep { /splice/ } @protocol;
 	print $fh "${proto}protocol proto-$test {";
-	# substitute variables in config file
-	foreach (@protocol) {
-		s/(\$[a-z]+)/$1/eeg;
-	}
 	if ($self->{inspectssl}) {
 		$self->{listenssl} = $self->{forwardssl} = 1;
 		print $fh "\n\ttls ca cert ca.crt";
 		print $fh "\n\ttls ca key ca.key password ''";
+	}
+	# substitute variables in config file
+	foreach (@protocol) {
+		s/(\$[a-z]+)/$1/eeg;
 	}
 	print $fh  map { "\n\t$_" } @protocol;
 	print $fh  "\n}\n";
