@@ -7,6 +7,7 @@ our %args = (
     client => {
 	func => \&http_client,
 	ssl => 1,
+	loggrep => 'Issuer.*/OU=ca/',
     },
     relayd => {
 	protocol => [ "http",
