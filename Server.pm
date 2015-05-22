@@ -70,7 +70,8 @@ sub child {
 	if ($self->{ssl}) {
 		print STDERR "ssl version: ",$as->get_sslversion(),"\n";
 		print STDERR "ssl cipher: ",$as->get_cipher(),"\n";
-		print STDERR "ssl certificate:\n",$as->dump_peer_certificate();
+		print STDERR "ssl peer certificate:\n",
+		    $as->dump_peer_certificate();
 	}
 
 	*STDIN = *STDOUT = $self->{as} = $as;
