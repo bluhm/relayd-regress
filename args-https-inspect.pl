@@ -1,4 +1,4 @@
-# test https connection over http relay
+# test https connection over http relay with TLS inspection
 
 use strict;
 use warnings;
@@ -13,9 +13,7 @@ our %args = (
 	    "match request header log foo",
 	    "match response header log bar",
 	],
-	forwardssl => 1,
-	listenssl => 1,
-
+	inspectssl => 1,
     },
     server => {
 	func => \&http_server,
