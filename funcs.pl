@@ -409,6 +409,8 @@ sub check_logs {
 	check_loggrep($c, $r, $s, %args);
 	$r->loggrep("lost child")
 	    and die "relayd lost child";
+	$r->loggrep("connect already called once")
+	    and die "relayd connect called twice";
 }
 
 sub check_len {
