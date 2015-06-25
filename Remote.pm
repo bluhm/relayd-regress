@@ -87,13 +87,13 @@ sub child {
 	my @sudo = $ENV{SUDO} ? "SUDO=$ENV{SUDO}" : ();
 	my @ktrace = $ENV{KTRACE} ? "KTRACE=$ENV{KTRACE}" : ();
 	my @relayd = $ENV{RELAYD} ? "RELAYD=$ENV{RELAYD}" : ();
-	my $curdir = dirname($0) || ".";
-	$curdir = getcwd() if $curdir eq ".";
+	my $dir = dirname($0) || ".";
+	$dir = getcwd() if $dir eq ".";
 	my @cmd = ("ssh", @opts, $self->{remotessh},
 	    @sudo, @ktrace, @relayd, "perl",
-	    "-I", $curdir, "$curdir/".basename($0), $self->{forward},
+	    "-I", $dir, "$dir/".basename($0), $self->{forward},
 	    $self->{listenaddr}, $self->{connectaddr}, $self->{connectport},
-	    ($self->{testfile} ? "$curdir/".basename($self->{testfile}) : ()));
+	    ($self->{testfile} ? "$dir/".basename($self->{testfile}) : ()));
 	print STDERR "execute: @cmd\n";
 	exec @cmd;
 	die ref($self), " exec '@cmd' failed: $!";
