@@ -83,12 +83,13 @@ sub up {
 
 sub child {
 	my $self = shift;
+
 	my @opts = split(' ', $ENV{SSH_OPTIONS}) if $ENV{SSH_OPTIONS};
 	my @sudo = $ENV{SUDO} ? "SUDO=$ENV{SUDO}" : ();
 	my @ktrace = $ENV{KTRACE} ? "KTRACE=$ENV{KTRACE}" : ();
 	my @relayd = $ENV{RELAYD} ? "RELAYD=$ENV{RELAYD}" : ();
-	my $dir = dirname($0) || ".";
-	$dir = getcwd() if $dir eq ".";
+	my $dir = dirname($0);
+	$dir = getcwd() if ! $dir || $dir eq ".";
 	my @cmd = ("ssh", @opts, $self->{remotessh},
 	    @sudo, @ktrace, @relayd, "perl",
 	    "-I", $dir, "$dir/".basename($0), $self->{forward},
