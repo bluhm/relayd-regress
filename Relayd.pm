@@ -21,6 +21,7 @@ package Relayd;
 use parent 'Proc';
 use Carp;
 use Cwd;
+use Sys::Hostname;
 use File::Basename;
 
 sub new {
@@ -60,6 +61,8 @@ sub new {
 	# substitute variables in config file
 	my $curdir = dirname($0) || ".";
 	my $objdir = getcwd();
+	my $hostname = hostname();
+	(my $host = $hostname) =~ s/\..*//;
 	my $connectport = $self->{connectport};
 	my $connectaddr = $self->{connectaddr};
 	my $listenaddr = $self->{listenaddr};
