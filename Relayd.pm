@@ -20,6 +20,7 @@ use warnings;
 package Relayd;
 use parent 'Proc';
 use Carp;
+use Cwd;
 use File::Basename;
 
 sub new {
@@ -58,6 +59,7 @@ sub new {
 
 	# substitute variables in config file
 	my $curdir = dirname($0) || ".";
+	my $objdir = getcwd();
 	my $connectport = $self->{connectport};
 	my $connectaddr = $self->{connectaddr};
 	my $listenaddr = $self->{listenaddr};
