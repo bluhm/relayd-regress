@@ -68,7 +68,7 @@ run-regress-$a: $a
 
 .for ip in ${REMOTE_ADDR} 127.0.0.1
 ${ip}.crt: ca.crt
-	openssl req -batch -new -subj /L=OpenBSD/O=relayd-regress/OU=relay/CN=${ip}/ -nodes -newkey rsa -keyout ${ip}.key -x509 -out $@
+	openssl req -batch -new -subj /L=OpenBSD/O=relayd-regress/OU=relayd/CN=${ip}/ -nodes -newkey rsa -keyout ${ip}.key -x509 -out $@
 .if empty (REMOTE_SSH)
 	${SUDO} cp 127.0.0.1.crt /etc/ssl/
 	${SUDO} cp 127.0.0.1.key /etc/ssl/private/
