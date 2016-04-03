@@ -84,7 +84,7 @@ sub up {
 sub child {
 	my $self = shift;
 
-	my @opts = split(' ', $ENV{SSH_OPTIONS}) if $ENV{SSH_OPTIONS};
+	my @opts = $ENV{SSH_OPTIONS} ? split(' ', $ENV{SSH_OPTIONS}) : ();
 	my @sudo = $ENV{SUDO} ? "SUDO=$ENV{SUDO}" : ();
 	my @ktrace = $ENV{KTRACE} ? "KTRACE=$ENV{KTRACE}" : ();
 	my @relayd = $ENV{RELAYD} ? "RELAYD=$ENV{RELAYD}" : ();
