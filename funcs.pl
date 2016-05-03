@@ -505,9 +505,10 @@ sub check_len {
 
 	$args{len} ||= 251 unless $args{lengths};
 
-	my @clen = $c->loggrep(qr/^LEN: /) or die "no client len"
+	my (@clen, @slen);
+	@clen = $c->loggrep(qr/^LEN: /) or die "no client len"
 	    unless $args{client}{nocheck};
-	my @slen = $s->loggrep(qr/^LEN: /) or die "no server len"
+	@slen = $s->loggrep(qr/^LEN: /) or die "no server len"
 	    unless $args{server}{nocheck};
 	!@clen || !@slen || @clen ~~ @slen
 	    or die "client: @clen", "server: @slen", "len mismatch";
@@ -534,8 +535,9 @@ sub check_len {
 sub check_md5 {
 	my ($c, $r, $s, %args) = @_;
 
-	my @cmd5 = $c->loggrep(qr/^MD5: /) unless $args{client}{nocheck};
-	my @smd5 = $s->loggrep(qr/^MD5: /) unless $args{server}{nocheck};
+	my (@clen, @slen);
+	@cmd5 = $c->loggrep(qr/^MD5: /) unless $args{client}{nocheck};
+	@smd5 = $s->loggrep(qr/^MD5: /) unless $args{server}{nocheck};
 	!@cmd5 || !@smd5 || $cmd5[0] eq $smd5[0]
 	    or die "client: $cmd5[0]", "server: $smd5[0]", "md5 mismatch";
 
