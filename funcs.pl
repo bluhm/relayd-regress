@@ -1,4 +1,4 @@
-#	$OpenBSD: funcs.pl,v 1.21 2015/07/20 05:37:49 bluhm Exp $
+#	$OpenBSD: funcs.pl,v 1.22 2016/05/03 19:13:04 bluhm Exp $
 
 # Copyright (c) 2010-2015 Alexander Bluhm <bluhm@openbsd.org>
 #
@@ -535,7 +535,7 @@ sub check_len {
 sub check_md5 {
 	my ($c, $r, $s, %args) = @_;
 
-	my (@clen, @slen);
+	my (@cmd5, @smd5);
 	@cmd5 = $c->loggrep(qr/^MD5: /) unless $args{client}{nocheck};
 	@smd5 = $s->loggrep(qr/^MD5: /) unless $args{server}{nocheck};
 	!@cmd5 || !@smd5 || $cmd5[0] eq $smd5[0]
