@@ -51,6 +51,7 @@ $s = Server->new(
     redo                => $redo,
     %{$args{server}},
     testfile            => $testfile,
+    client              => \$c,
 ) unless $args{server}{noserver};
 $r = Relayd->new(
     forward             => $ARGV[0],
@@ -71,6 +72,7 @@ $c = Client->new(
     connectport         => $rport,
     %{$args{client}},
     testfile            => $testfile,
+    server              => \$s,
 ) unless $args{client}{noclient};
 
 $s->run unless $args{server}{noserver};
