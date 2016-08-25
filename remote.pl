@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#	$OpenBSD: remote.pl,v 1.8 2016/05/03 19:13:04 bluhm Exp $
+#	$OpenBSD: remote.pl,v 1.9 2016/08/25 22:56:13 bluhm Exp $
 
 # Copyright (c) 2010-2014 Alexander Bluhm <bluhm@openbsd.org>
 #
