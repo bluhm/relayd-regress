@@ -51,24 +51,24 @@ sub new {
 	if ($self->{sndbuf}) {
 		setsockopt($ls, SOL_SOCKET, SO_SNDBUF,
 		    pack('i', $self->{sndbuf}))
-		    or die ref($self), " set sndbuf SO_SNDBUF failed: $!";
+		    or die ref($self), " set SO_SNDBUF failed: $!";
 	}
 	if ($self->{rcvbuf}) {
 		setsockopt($ls, SOL_SOCKET, SO_RCVBUF,
 		    pack('i', $self->{rcvbuf}))
-		    or die ref($self), " set rcvbuf SO_RCVBUF failed: $!";
+		    or die ref($self), " set SO_RCVBUF failed: $!";
 	}
 	my $packstr = $Config{longsize} == 8 ? 'ql!' :
 	    $Config{byteorder} == 1234 ? 'lxxxxl!' : 'xxxxll!';
 	if ($self->{sndtimeo}) {
 		setsockopt($ls, SOL_SOCKET, SO_SNDTIMEO,
 		    pack($packstr, $self->{sndtimeo}, 0))
-		    or die ref($self), " set SO_SNDTIMEO failed failed: $!";
+		    or die ref($self), " set SO_SNDTIMEO failed: $!";
 	}
 	if ($self->{rcvtimeo}) {
 		setsockopt($ls, SOL_SOCKET, SO_RCVTIMEO,
 		    pack($packstr, $self->{rcvtimeo}, 0))
-		    or die ref($self), " set SO_RCVTIMEO failed failed: $!";
+		    or die ref($self), " set SO_RCVTIMEO failed: $!";
 	}
 	my $log = $self->{log};
 	print $log "listen sock: ",$ls->sockhost()," ",$ls->sockport(),"\n";
