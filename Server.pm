@@ -41,13 +41,12 @@ sub new {
 	    Proto		=> "tcp",
 	    ReuseAddr		=> 1,
 	    Domain		=> $self->{listendomain},
-	    Listen		=> 1,
 	    $self->{listenaddr} ? (LocalAddr => $self->{listenaddr}) : (),
 	    $self->{listenport} ? (LocalPort => $self->{listenport}) : (),
 	    SSL_key_file	=> "server.key",
 	    SSL_cert_file	=> "server.crt",
 	    SSL_verify_mode	=> SSL_VERIFY_NONE,
-	) or die ref($self), " $iosocket socket listen failed: $!,$SSL_ERROR";
+	) or die ref($self), " $iosocket socket failed: $!,$SSL_ERROR";
 	if ($self->{sndbuf}) {
 		setsockopt($ls, SOL_SOCKET, SO_SNDBUF,
 		    pack('i', $self->{sndbuf}))
@@ -70,6 +69,8 @@ sub new {
 		    pack($packstr, $self->{rcvtimeo}, 0))
 		    or die ref($self), " set SO_RCVTIMEO failed: $!";
 	}
+	listen($ls, 1)
+	    or die ref($self), " socket listen failed: $!";
 	my $log = $self->{log};
 	print $log "listen sock: ",$ls->sockhost()," ",$ls->sockport(),"\n";
 	$self->{listenaddr} = $ls->sockhost() unless $self->{listenaddr};
