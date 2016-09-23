@@ -20,6 +20,15 @@ regress:
 	@echo SKIPPED
 .endif
 
+.if make (regress) || make (all)
+.BEGIN:
+.if empty (REMOTE_SSH)
+	${SUDO} true
+.else
+	ssh -t ${REMOTE_SSH} ${SUDO} true
+.endif
+.endif
+
 # Fill out these variables if you want to test relayd with
 # the relayd process running on a remote machine.  You have to specify
 # a local and remote ip address for the tcp connections.  To control
@@ -59,7 +68,6 @@ run-regress-$a: $a
 	time SUDO=${SUDO} KTRACE=${KTRACE} RELAYD=${RELAYD} perl ${PERLINC} ${PERLPATH}relayd.pl copy ${PERLPATH}$a
 	time SUDO=${SUDO} KTRACE=${KTRACE} RELAYD=${RELAYD} perl ${PERLINC} ${PERLPATH}relayd.pl splice ${PERLPATH}$a
 .else
-	ssh -t ${REMOTE_SSH} ${SUDO} true
 	time SUDO=${SUDO} KTRACE=${KTRACE} RELAYD=${RELAYD} perl ${PERLINC} ${PERLPATH}remote.pl copy ${LOCAL_ADDR} ${REMOTE_ADDR} ${REMOTE_SSH} ${PERLPATH}$a
 	time SUDO=${SUDO} KTRACE=${KTRACE} RELAYD=${RELAYD} perl ${PERLINC} ${PERLPATH}remote.pl splice ${LOCAL_ADDR} ${REMOTE_ADDR} ${REMOTE_SSH} ${PERLPATH}$a
 .endif
