@@ -5,16 +5,18 @@ use warnings;
 
 our %args = (
     client => {
-	func => \&read_char,
+	func => \&http_client,
+	len => 5,
+	method => "GET",
 	timefile => "",
     },
     relayd => {
 	relay => [ "session timeout 2" ],
     },
     server => {
-	func => \&write_char,
-	len => 5,
+	func => \&http_server,
 	sleep => 1,
+	method => "GET",
     },
     len => 5,
 );
