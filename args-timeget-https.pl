@@ -9,14 +9,18 @@ our %args = (
 	len => 5,
 	method => "GET",
 	timefile => "",
+	ssl => 1,
     },
     relayd => {
 	relay => [ "session timeout 2" ],
+	forwardssl => 1,
+	listenssl => 1,
     },
     server => {
 	func => \&http_server,
 	sleep => 1,
 	method => "GET",
+	ssl => 1,
     },
     len => 5,
 );

@@ -8,10 +8,13 @@ our %args = (
 	func => \&http_client,
 	len => 5,
 	timefile => "",
+	ssl => 1,
     },
     relayd => {
 	protocol => [ "http" ],
 	relay => [ "session timeout 3" ],
+	forwardssl => 1,
+	listenssl => 1,
     },
     server => {
 	func => sub {
@@ -23,6 +26,7 @@ our %args = (
 	sleep => 1,
 	down => "Broken pipe",
 	nocheck => 1,
+	ssl => 1,
     },
     len => 5,
 );
