@@ -1,24 +1,19 @@
-# test that 3 seconds timeout does not occur within 2 seconds idle
+# test that 2 seconds timeout does not occur while client writes for 4 seconds
 
 use strict;
 use warnings;
 
 our %args = (
     client => {
-	func => sub {
-	    errignore();
-	    write_char(@_, 5);
-	    sleep 2;
-	    write_char(@_, 4);
-	},
+	func => \&write_char,
+	len => 5,
 	sleep => 1,
 	timefile => "",
-	nocheck => 1,
     },
     relayd => {
-	relay => [ "session timeout 3" ],
+	relay => [ "session timeout 2" ],
     },
-    len => 9,
+    len => 5,
 );
 
 1;
