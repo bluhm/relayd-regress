@@ -10,6 +10,7 @@ our %args = (
 	method => "GET",
 	timefile => "",
 	ssl => 1,
+	loggrep => 'Issuer.*/OU=relayd/',
     },
     relayd => {
 	relay => [ "session timeout 2" ],

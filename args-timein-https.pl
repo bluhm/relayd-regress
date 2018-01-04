@@ -9,6 +9,7 @@ our %args = (
 	len => 5,
 	timefile => "",
 	ssl => 1,
+	loggrep => 'Issuer.*/OU=relayd/',
     },
     relayd => {
 	protocol => [ "http" ],

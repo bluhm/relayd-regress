@@ -11,6 +11,7 @@ our %args = (
 	method => "PUT",
 	timefile => "",
 	ssl => 1,
+	loggrep => 'Issuer.*/OU=relayd/',
     },
     relayd => {
 	relay => [ "session timeout 2" ],
