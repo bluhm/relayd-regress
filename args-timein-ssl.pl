@@ -14,9 +14,16 @@ our %args = (
 	sleep => 1,
 	timefile => "",
 	nocheck => 1,
+	ssl => 1,
+	loggrep => 'Issuer.*/OU=relayd/',
     },
     relayd => {
 	relay => [ "session timeout 3" ],
+	forwardssl => 1,
+	listenssl => 1,
+    },
+    server => {
+	ssl => 1,
     },
     len => 9,
 );

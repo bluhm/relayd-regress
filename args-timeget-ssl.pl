@@ -7,14 +7,19 @@ our %args = (
     client => {
 	func => \&read_char,
 	timefile => "",
+	ssl => 1,
+	loggrep => 'Issuer.*/OU=relayd/',
     },
     relayd => {
 	relay => [ "session timeout 2" ],
+	forwardssl => 1,
+	listenssl => 1,
     },
     server => {
 	func => \&write_char,
 	len => 5,
 	sleep => 1,
+	ssl => 1,
     },
     len => 5,
 );
