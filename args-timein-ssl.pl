@@ -19,6 +19,7 @@ our %args = (
     },
     relayd => {
 	relay => [ "session timeout 3" ],
+	loggrep => { qr/buffer event timeout/ => 0 },
 	forwardssl => 1,
 	listenssl => 1,
     },
