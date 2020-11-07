@@ -78,6 +78,7 @@ sub new {
 	    $self->{forward} eq "copy"   ? "tcp no splice" :
 	    die ref($self), " invalid forward $self->{forward}"
 	    unless grep { /splice/ } @protocol;
+	push @protocol, "tcp nodelay";
 	print $fh "${proto}protocol proto-$test {";
 	if ($self->{inspectssl}) {
 		$self->{listenssl} = $self->{forwardssl} = 1;

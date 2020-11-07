@@ -21,7 +21,7 @@ package Server;
 use parent 'Proc';
 use Carp;
 use Config;
-use Socket;
+use Socket qw(:DEFAULT IPPROTO_TCP TCP_NODELAY);
 use Socket6;
 use IO::Socket;
 use IO::Socket::INET6;
@@ -70,6 +70,8 @@ sub new {
 		    pack($packstr, $self->{rcvtimeo}, 0))
 		    or die ref($self), " set SO_RCVTIMEO failed: $!";
 	}
+	setsockopt($ls, IPPROTO_TCP, TCP_NODELAY, pack('i', 1))
+	    or die ref($self), " set TCP_NODELAY failed: $!";
 	listen($ls, 1)
 	    or die ref($self), " socket listen failed: $!";
 	my $log = $self->{log};
